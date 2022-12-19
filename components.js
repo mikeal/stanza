@@ -56,9 +56,9 @@ class MyPages extends Tonic {
 class MediaLine extends Tonic {
   render () {
     return this.html`
-      <media-line-container>
+      <div>
         ${ this.render_line() }
-      </media-line-container>
+      </div>
     `
   }
 }
@@ -72,7 +72,6 @@ class NewPageLine extends MediaLine {
 }
 
 class MarkedLine extends Tonic {
-
   render () {
     marked.parse
   }

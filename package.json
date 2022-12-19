@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@socketsupply/components": "^13.2.22",
-    "@socketsupply/tonic": "^14.1.5"
+    "@socketsupply/tonic": "^14.1.5",
+    "varint-vectors": "^1.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.16.4",
