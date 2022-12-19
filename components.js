@@ -71,19 +71,33 @@ class NewPageLine extends MediaLine {
   }
 }
 
+class MarkedLine extends Tonic {
+
+  render () {
+    marked.parse
+  }
+}
+
 class MediaVectorPage extends Tonic {
   style () {
   }
   render () {
+    let content
     if (this.props.content === 'empty') {
-      content = [this.html`'New page']
+      content = [this.html`<h1>Title</h1>`]
     } else {
       throw new Error('Not Implemented')
     }
-    return this.html`<div></div>`
+    return this.html`<mv-page>${ content.map(c => {
+        return this.html`<mv-row> ${ c } </mv-row>`
+      })
+    }</mv-page>`
+
   }
 }
 
 Tonic.add(MyPage)
 Tonic.add(MyPages)
-
+Tonic.add(MediaLine)
+Tonic.add(NewPageLine)
+Tonic.add(MediaVectorPage)
