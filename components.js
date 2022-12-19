@@ -36,7 +36,7 @@ class MyPage extends Tonic {
 class MyPages extends Tonic {
   render () {
     return this.html`
-      <tonic-tabs id="my-pages-tabs">
+      <tonic-tabs id="my-pages-tabs" selected="tab-panel-public">
       ${ fixture.pages.map(page => this.html`
         <tonic-tab
          id="${page.name}"
@@ -78,8 +78,6 @@ class MarkedLine extends Tonic {
 }
 
 class MediaVectorPage extends Tonic {
-  style () {
-  }
   render () {
     let content
     if (this.props.content === 'empty') {
