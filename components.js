@@ -12,7 +12,6 @@ const fixture = {
   ]
 }
 
-
 /* storage interfaces */
 
 const loadcar = (carcid) => {}
@@ -72,8 +71,29 @@ class NewPageLine extends MediaLine {
 }
 
 class MarkedLine extends Tonic {
+  click (e) {
+    if (!this.props.editor) {
+      const self = this
+      this.reRender(props => ({ ...props, editor: true })).then(() => {
+        const elem = self.querySelector('blockquote')
+        elem.focus()
+      })
+    }
+  }
+  render_rendered () {
+    const string = this.props.markdown
+    return this.html(marked.parse(string))
+  }
+  render_editor () {
+    const string = this.props.markdown
+    return this.html`<blockquote contenteditable="true">${string}</blockquote>`
+  }
   render () {
-    marked.parse
+    if (this.props.editor) {
+      return this.render_editor()
+    } else {
+      return this.render_rendered()
+    }
   }
 }
 
@@ -81,12 +101,12 @@ class MediaVectorPage extends Tonic {
   render () {
     let content
     if (this.props.content === 'empty') {
-      content = [this.html`<h1>Title</h1>`]
+      content = [this.html`<marked-line markdown="# Title"></marked-line>`]
     } else {
       throw new Error('Not Implemented')
     }
     return this.html`<mv-page>${ content.map(c => {
-        return this.html`<mv-row> ${ c } </mv-row>`
+        return this.html`<mv-row width="100%"> ${ c } </mv-row>`
       })
     }</mv-page>`
 
@@ -97,4 +117,5 @@ Tonic.add(MyPage)
 Tonic.add(MyPages)
 Tonic.add(MediaLine)
 Tonic.add(NewPageLine)
+Tonic.add(MarkedLine)
 Tonic.add(MediaVectorPage)
