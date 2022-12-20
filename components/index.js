@@ -48,26 +48,63 @@ class MyPages extends Tonic {
 }
 
 class ObjectLine extends Tonic {
-}
+  keypress (e) {
+    const self = this
+    if (e.charCode === 13 && !e.shiftKey) {
+      const json = this.querySelector('blockquote').textContent
+      console.log({json})
+      const self = this
+      this.reRender(props => ({ ...props, json, editor: false })).then(() => {
+        self.props.save(self)
+      })
+    }
+  }
+  render_editor () {
+    return this.html`<blockquote class="markdown-editor" contenteditable="true">${this.props.json}</blockquote>`
+  }
+  render () {
+    if (this.props.command) {
+      const cmd = this.props.command
+      let json
+      if (cmd.length > '/object '.length) {
+        if (cmd === '/object') json = '{}'
+        if (cmd === '/object ') json = '{}'
+      } else {
+        json = cmd.slice('/object '.length)
+      }
+      if (json === '') json = '{}'
 
-const commands = {
-  'object': ObjectLine
+      this.props.json = json
+      this.props.command = null
+      return this.render_editor()
+    }
+    if (this.props.editor) return this.render_editor()
+
+    const str = JSON.stringify(this.props.json, null, 2)
+    const markdown = () => '```json\n' + str + '\n```'
+    return this.html`<marked-line markdown=${markdown}></marked-line>`
+  }
 }
 
 class NewLine extends Tonic {
   run_command (command) {
-    const name = command.slice(1, command.indexOf(' '))
-    console.log({ name })
+    const offset = command.indexOf(' ')
+    const name = command.slice(1, offset === -1 ? command.length : offset)
+    const elem = this.html`<${name}-line command=${command}></${name}-line>`
+    this.props.addrow(elem)
+
+    // after success, clear command
+    this.querySelector('blockquote').textContent = ''
   }
   keypress (e) {
     if (e.charCode === 13 && !e.shiftKey) {
       const markdown = this.querySelector('blockquote').textContent
       if (markdown.startsWith('/')) {
         return this.run_command(markdown)
+      } else {
+        this.props.addrow(this.html`<marked-line markdown=${markdown}></marked_line>`)
+        this.querySelector('blockquote').textContent = ''
       }
-
-      this.props.addrow(this.html`<marked-line markdown=${markdown}></marked_line>`)
-      this.querySelector('blockquote').textContent = ''
     }
   }
   render () {
@@ -102,11 +139,13 @@ class MarkedLine extends Tonic {
     }
   }
   render_rendered () {
-    const string = this.props.markdown
+    let string = this.props.markdown
+    if (typeof string === 'function') string = string()
     return this.html(marked.parse(string))
   }
   render_editor () {
-    const string = this.props.markdown
+    let string = this.props.markdown
+    if (typeof string === 'function') string = string()
     return this.html`
       <blockquote class="markdown-editor" contenteditable="true">${string}</blockquote>`
   }
@@ -133,6 +172,7 @@ class MediaVectorPage extends Tonic {
     }
     this.props.content = content
     const addRow = r => {
+      console.log({r})
       content.push(r)
       return this.reRender(props => ({ ...props, content }))
     }
@@ -151,4 +191,5 @@ Tonic.add(MyPage)
 Tonic.add(MyPages)
 Tonic.add(NewLine)
 Tonic.add(MarkedLine)
+Tonic.add(ObjectLine)
 Tonic.add(MediaVectorPage)
