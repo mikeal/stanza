@@ -2,7 +2,7 @@ import { createServer } from 'esbuild-server'
 
 const bundle = {
   bundle: true,
-  entryPoints: ['./components.js']
+  entryPoints: ['./includes.js']
 }
 const dev = {
   static: './',
