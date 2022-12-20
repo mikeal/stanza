@@ -6,12 +6,14 @@ body {
   margin: 0 0 0 0;
   font-family: 'Merriweather', serif;
   letter-spacing: .7px;
+  font-size: 150%;
 }
 
 mv-row {
   display: block;
 }
-mv-row * {
+mv-row > * {
+  display: block;
   padding-left: 10px;
   margin: 0 0 0 0;
 }
@@ -21,6 +23,23 @@ mv-row:hover {
   background-color: #E8E8E8;
   cursor: text;
 }
-mv-row:hover * {
+mv-row:hover > * {
   padding-left: 5px;
+}
+
+
+new-line {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  background-color: #E8E8E8;
+  outline: none;
+}
+
+blockquote.markdown-editor :focus {
+  font-family: 'Merriweather', serif;
+  outline: none;
+}
+blockquote.markdown-editor {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
 }
